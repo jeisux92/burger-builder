@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import classes from './App.css';
 
 class App extends Component {
@@ -7,7 +6,6 @@ class App extends Component {
     return (
       <div className={classes.App}>
         <header className={classes.Appheader}>
-          <img src={logo} className={classes.Applogo} alt="logo" />
           <p>
             Edit <code>src/App.js</code> and save to reload.
           </p>
