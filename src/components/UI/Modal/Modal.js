@@ -6,7 +6,7 @@ import Aux from '../../../hoc/Auxiliary/auxiliar';
 class Modal extends Component {
     shouldComponentUpdate(nextProps) {
 
-        if (nextProps.show !== this.props.show) {
+        if (nextProps.show !== this.props.show || nextProps.children !== this.props.children) {
             return true;
         }
         else {
@@ -19,7 +19,7 @@ class Modal extends Component {
     render() {
         return (
             <Aux>
-                <Backdrop show={this.props.show} clicked={this.props.modalClosed.bind(this)}>
+                <Backdrop show={this.props.show} clicked={this.props.modalClosed}>
                 </Backdrop>
                 <div className={classes.Modal} style={{
                     transform: this.props.show ? 'translateY(0)' : 'translateY(-100vh)',
