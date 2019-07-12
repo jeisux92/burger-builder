@@ -18,6 +18,8 @@ const order = props => {
       </p>
     ));
   }
+ 
+
   return (
     <div className={classes.Order}>
       Ingredients: {ingredientValues}
