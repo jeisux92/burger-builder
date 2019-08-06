@@ -25,10 +25,10 @@ class BurgerBuilder extends Component {
     error: false
   };
   componentDidMount() {
-    axios
-      .get("ingredients.json")
-      .then(response => this.setState({ ingredients: response.data }))
-      .catch(error => this.setState({ error: true }));
+    // axios
+    //   .get("ingredients.json")
+    //   .then(response => this.setState({ ingredients: response.data }))
+    //   .catch(error => this.setState({ error: true }));
   }
   updatePurchase = updatedIngredients => {
     const ingredients = updatedIngredients;
