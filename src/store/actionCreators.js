@@ -3,12 +3,12 @@ import {
     REMOVE_INGREDIENT
 } from "./actions";
 
-export const addIngredient = (value) => ({
+export const addIngredient = (ingredientName) => ({
     type: ADD_INGREDIENT,
-    value: value
+    ingredientName: ingredientName
 })
 
-export const addIngredient = (id) => ({
+export const removeIngredient = (ingredientName) => ({
     type: REMOVE_INGREDIENT,
-    id: id
+    ingredientName: ingredientName
 })
