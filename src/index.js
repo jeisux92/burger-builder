@@ -5,23 +5,13 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose } from 'redux';
-import reducer from './store/reducer';
-
-const logger = (store) => {
-    return next => {
-        return action => {
-            console.log("Middleware Dispatchig", action);
-            console.log("Middleware previous state", store.getState())
-            const result = next(action);
-            console.log("Middleware next state", store.getState())
-            return result;
-        }
-    }
-}
+import burgerBuilderReducer from "./store/reducers/burgerBuilder";
+import thunk from "redux-thunk";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
-const store = createStore(reducer, composeEnhancers(applyMiddleware(logger)));
+const store = createStore(burgerBuilderReducer, composeEnhancers(
+    applyMiddleware(thunk)
+));
 
 ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
 

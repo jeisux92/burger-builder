@@ -8,19 +8,14 @@ import axios from "../../axios-orders";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 import { connect } from "react-redux"
-import { addIngredient, removeIngredient } from "../../store/actionCreators";
+import { addIngredient, removeIngredient, initIngredients } from "../../store/actions";
 
 class BurgerBuilder extends Component {
   state = {
-    purchasing: false,
-    loading: false,
-    error: false
+    purchasing: false
   };
   componentDidMount() {
-    // axios
-    //   .get("ingredients.json")
-    //   .then(response => this.setState({ ingredients: response.data }))
-    //   .catch(error => this.setState({ error: true }));
+    this.props.initIngredients();
   }
   updatePurchase = () => {
     const ingredients = this.props.ingredients;
@@ -61,7 +56,7 @@ class BurgerBuilder extends Component {
 
     let orderSummary = null;
 
-    let burger = this.state.error ? (
+    let burger = this.props.error ? (
       <p>Ingredients can't be loaded</p>
     ) : (
         <Spinner />
@@ -91,10 +86,6 @@ class BurgerBuilder extends Component {
       );
     }
 
-    if (this.state.loading) {
-      orderSummary = <Spinner />;
-    }
-
     return (
       <Aux>
         <Modal
@@ -110,12 +101,14 @@ class BurgerBuilder extends Component {
 }
 const mapStateToProps = (state) => ({
   ingredients: state.ingredients,
-  totalPrice: state.totalPrice
+  totalPrice: state.totalPrice,
+  error: state.error
 })
 
 const mapDispatchToProps = (dipatch) => ({
   addIngredient: (ingredientName) => dipatch(addIngredient(ingredientName)),
-  removeIngredient: (ingredientName) => dipatch(removeIngredient(ingredientName))
+  removeIngredient: (ingredientName) => dipatch(removeIngredient(ingredientName)),
+  initIngredients: () => dipatch(initIngredients())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(BurgerBuilder, axios));
