@@ -2,7 +2,7 @@ import {
     ADD_INGREDIENT,
     REMOVE_INGREDIENT,
     SET_INGREDIENTS,
-    FETCH_INGREDIENTS_FAILED
+    FETCH_INGREDIENTS_STATUS
 } from "./actionTypes";
 import axios from "../../axios-orders";
 
@@ -22,8 +22,8 @@ const setIngredients = (ingredients) => ({
     ingredients: ingredients
 })
 
-export const setError = error => ({
-    type: FETCH_INGREDIENTS_FAILED,
+export const setState = error => ({
+    type: FETCH_INGREDIENTS_STATUS,
     error: error
 })
 
@@ -32,9 +32,9 @@ export const initIngredients = () => {
         axios
             .get("ingredients.json")
             .then(response => {
+                dispatch(setState(false))
                 dispatch(setIngredients(response.data));
-                dispatch(setError(false))
             })
-            .catch(() => dispatch(setError(true)))
+            .catch(() => dispatch(setState(true)))
     }
 }

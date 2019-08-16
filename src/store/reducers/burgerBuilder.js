@@ -2,7 +2,7 @@ import {
     ADD_INGREDIENT,
     REMOVE_INGREDIENT,
     SET_INGREDIENTS,
-    FETCH_INGREDIENTS_FAILED
+    FETCH_INGREDIENTS_STATUS
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -50,9 +50,10 @@ const reducer = (state = initialState, action) => {
                     bacon: action.ingredients.bacon,
                     cheese: action.ingredients.cheese,
                     meat: action.ingredients.meat
-                }
+                },
+                totalPrice: 4
             }
-        case FETCH_INGREDIENTS_FAILED:
+        case FETCH_INGREDIENTS_STATUS:
             return {
                 ...state,
                 error: action.error

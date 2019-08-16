@@ -5,7 +5,8 @@ import axios from "../../../axios-orders";
 import Spinner from "../../../components/UI/Spinner/Spinner";
 import Input from "../../../components/UI/Input/Input";
 import { connect } from "react-redux";
-
+import withErrorHandler from "../../../hoc/withErrorHandler/withErrorHandler"
+import { purchaseBurger } from "../../../store/actions/order";
 class ContactData extends Component {
   state = {
     orderForm: {
@@ -97,15 +98,10 @@ class ContactData extends Component {
         valid: true
       }
     },
-    formIsValid: false,
-    loading: false
+    formIsValid: false
   };
   orderHandler = e => {
     e.preventDefault();
-    this.setState({
-      loading: true
-    });
-
     const formData = {};
     for (const input in this.state.orderForm) {
       formData[input] = this.state.orderForm[input].value;
@@ -115,17 +111,8 @@ class ContactData extends Component {
       price: this.props.totalPrice,
       orderData: formData
     };
-    axios
-      .post("orders.json", order)
-      .then(response => {
-        this.props.history.push("/");
-      })
-      .catch(error => console.log(error))
-      .finally(
-        this.setState({
-          loading: false
-        })
-      );
+
+    this.props.onOrderBurger(order);
   };
 
   checkValidity = (value, rules) => {
@@ -199,7 +186,7 @@ class ContactData extends Component {
         </Button>
       </form>
     );
-    if (this.state.loading) {
+    if (this.props.loading) {
       form = <Spinner />;
     }
     return (
@@ -211,9 +198,12 @@ class ContactData extends Component {
   }
 }
 const mapStateToProps = (state) => ({
-  ingredients: state.ingredients,
-  totalPrice: state.totalPrice
+  ingredients: state.burger.ingredients,
+  totalPrice: state.burger.totalPrice,
+  loading: state.order.loading
 })
 
-
-export default connect(mapStateToProps)(ContactData);
+const mapDispatchToProps = dispatch => ({
+  onOrderBurger: (orderData) => dispatch(purchaseBurger(orderData))
+});
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(ContactData, axios));
