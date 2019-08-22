@@ -41,7 +41,8 @@ class Auth extends Component {
                 touched: false
             },
         },
-        formIsValid: false
+        formIsValid: false,
+        isSignUp: true
     }
 
     checkValidity = (value, rules) => {
@@ -91,7 +92,11 @@ class Auth extends Component {
 
     submitHandler = (e) => {
         e.preventDefault();
-        this.props.onAuth(this.state.constrols.email, this.state.constrols.password)
+        this.props.onAuth(this.state.constrols.email.value, this.state.constrols.password.value, this.state.isSignUp)
+    }
+
+    switchAuthModeHandler = () => {
+        this.setState(prevState => ({ isSignUp: !prevState.isSignUp }))
     }
 
     render() {
@@ -115,16 +120,19 @@ class Auth extends Component {
                 <form onSubmit={this.submitHandler}>
                     {form}
                     <Button btnType="Success" clicked={() => auth} disabled={!this.state.formIsValid}>
-                        Order
+                        Submit
                     </Button>
                 </form>
+                <Button btnType="Danger" clicked={() => this.switchAuthModeHandler()}>
+                    Switch to {this.state.isSignUp ? "Sign-In" : "Sign-Up"}
+                </Button>
             </div >
         )
     }
 }
 
 const mapDispatchToProps = dispatch => ({
-    onAuth: (email, password) => dispatch(auth(email, password))
+    onAuth: (email, password, isAuth) => dispatch(auth(email, password, isAuth))
 })
 
 export default connect(null, mapDispatchToProps)(withErrorHandler(Auth, Axios));

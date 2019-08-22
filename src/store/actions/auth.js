@@ -20,10 +20,20 @@ export const authFail = (error) => ({
     error: error
 })
 
-export const auth = (email, password) => {
+export const auth = (email, password, isSignUp) => {
     return dispatch => {
-        dispatch(authStart(email, password));
-        axios.get("")
+        dispatch(authStart());
+        const user = {
+            email: email,
+            password: password,
+            returnSecureToken: true
+        }
+
+        let url = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAkfgZ59qvblKzjkMUvclUR2p4Cei1hd-A"
+        if (!isSignUp) {
+            url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAkfgZ59qvblKzjkMUvclUR2p4Cei1hd-A";
+        }
+        axios.post(url, user)
             .then(response => dispatch(authSuccess(response.data)))
             .catch(error => dispatch(authFail(error)))
     }
