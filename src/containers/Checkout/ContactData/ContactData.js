@@ -5,7 +5,7 @@ import axios from "../../../axios-orders";
 import Spinner from "../../../components/UI/Spinner/Spinner";
 import Input from "../../../components/UI/Input/Input";
 import { connect } from "react-redux";
-import withErrorHandler from "../../../hoc/withErrorHandler/withErrorHandler"
+import withErrorHandler from "../../../hoc/withErrorHandler/withErrorHandler";
 import { purchaseBurger } from "../../../store/actions/order";
 class ContactData extends Component {
   state = {
@@ -112,7 +112,7 @@ class ContactData extends Component {
       orderData: formData
     };
 
-    this.props.onOrderBurger(order);
+    this.props.onOrderBurger(order, this.props.token);
   };
 
   checkValidity = (value, rules) => {
@@ -130,12 +130,12 @@ class ContactData extends Component {
 
     if (rules.isEmail) {
       const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-      isValid = pattern.test(value) && isValid
+      isValid = pattern.test(value) && isValid;
     }
 
     if (rules.isNumeric) {
       const pattern = /^\d+$/;
-      isValid = pattern.test(value) && isValid
+      isValid = pattern.test(value) && isValid;
     }
     return isValid;
   };
@@ -197,13 +197,18 @@ class ContactData extends Component {
     );
   }
 }
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   ingredients: state.burger.ingredients,
   totalPrice: state.burger.totalPrice,
-  loading: state.order.loading
-})
+  loading: state.order.loading,
+  token: state.auth.token
+});
 
 const mapDispatchToProps = dispatch => ({
-  onOrderBurger: (orderData) => dispatch(purchaseBurger(orderData))
+  onOrderBurger: (orderData, token) =>
+    dispatch(purchaseBurger(orderData, token))
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(ContactData, axios));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withErrorHandler(ContactData, axios));
