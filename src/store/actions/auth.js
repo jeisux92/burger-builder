@@ -2,7 +2,8 @@ import {
   AUTH_FAIL,
   AUTH_START,
   AUTH_SUCCESS,
-  AUTH_LOGOUT
+  AUTH_LOGOUT,
+  SET_AUTH_REDIRECT
 } from "./actionTypes";
 import axios from "axios";
 
@@ -21,12 +22,12 @@ export const authFail = error => ({
   error: error
 });
 
-const logOut = () => ({ type: AUTH_LOGOUT });
+export const logout = () => ({ type: AUTH_LOGOUT });
 
 export const checkAuthTimeOut = expirationTime => {
   return dispatch => {
     setTimeout(() => {
-      dispatch(logOut());
+      dispatch(logout());
     }, expirationTime * 1000);
   };
 };
@@ -57,3 +58,8 @@ export const auth = (email, password, isSignUp) => {
       });
   };
 };
+
+export const setAuthRedirectPath = (path) => ({
+  type: SET_AUTH_REDIRECT,
+  path: path
+})
