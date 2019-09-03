@@ -1,20 +1,29 @@
-import React, { Component } from "react";
+import React, { Component, lazy, Suspense } from "react";
 import Layout from "./hoc/Layout/Layout";
 import BurgerBuilder from "./containers/BurgerBuilder/BurgerBuilder";
-import Checkout from "./containers/Checkout/Checkout";
-import Orders from "./containers/Orders/Orders";
-import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
-import Auth from "./containers/Auth/Auth";
+import { Switch, Route, Redirect, withRouter } from "react-router-dom";
+
 import Logout from "./containers/Auth/Logout/Logout";
 import { connect } from "react-redux";
 import { authCheckState } from "./store/actions";
 
+const Checkout = lazy(() => import('./containers/Checkout/Checkout'));
+const Orders = lazy(() => import('./containers/Orders/Orders'));
+const Auth = lazy(() => import('./containers/Auth/Auth'));
 class App extends Component {
+  state = {
+    route: ""
+  }
+
   componentDidMount() {
     this.props.onTryAutoSignUp();
+    if (this.state.route !== this.props.location.pathname) {
+      this.setState({ route: this.props.location.pathname })
+    }
   }
 
   render() {
+
     let route = (
       <Switch>
         <Route path="/" exact component={BurgerBuilder} />
@@ -25,20 +34,22 @@ class App extends Component {
 
     if (this.props.isAuthenticated) {
       route = (
-        <Switch>
-          <Route path="/" exact component={BurgerBuilder} />
-          <Route path="/logout" exact component={Logout} />
-          <Route path="/checkout" component={Checkout} />
-          <Route path="/orders" component={Orders} />
-          <Redirect to="/" />
-        </Switch>
+        <Suspense fallback={<div>Loading</div>}>
+          <Switch>
+            <Route path="/login" exact component={Auth} />
+            <Route path="/" exact component={BurgerBuilder} />
+            <Route path="/logout" exact component={Logout} />
+            <Route path="/checkout" component={Checkout} />
+            <Route path="/orders" component={Orders} />
+            <Redirect to={this.state.route} />
+          </Switch>
+        </Suspense>
       );
     }
     return (
       <div>
-        <BrowserRouter>
-          <Layout>{route}</Layout>
-        </BrowserRouter>
+
+        <Layout>{route}</Layout>
       </div>
     );
   }
@@ -55,4 +66,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(App);
+)(withRouter(App));

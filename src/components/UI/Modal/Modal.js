@@ -10,7 +10,6 @@ class Modal extends Component {
             return true;
         }
         else {
-            console.log("modal was updated");
             return false;
         }
     }

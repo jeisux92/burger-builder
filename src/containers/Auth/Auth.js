@@ -8,6 +8,7 @@ import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 import Axios from "axios";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import { Redirect } from "react-router-dom"
+import { updateObject, checkValidity } from "../../shared/utility";
 
 class Auth extends Component {
   state = {
@@ -51,44 +52,19 @@ class Auth extends Component {
     }
   }
 
-  checkValidity = (value, rules) => {
-    let isValid = true;
 
-    if (rules.required) {
-      isValid = value.trim() !== "" && isValid;
-    }
-    if (rules.minLength) {
-      isValid = value.trim().length >= 5 && isValid;
-    }
-    if (rules.maxLength) {
-      isValid = value.trim().length <= 5 && isValid;
-    }
-
-    if (rules.isEmail) {
-      const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-      isValid = pattern.test(value) && isValid;
-    }
-
-    if (rules.isNumeric) {
-      const pattern = /^\d+$/;
-      isValid = pattern.test(value) && isValid;
-    }
-    return isValid;
-  };
 
   inputChangedHandler = (controlName, e) => {
-    const updatedControls = {
-      ...this.state.constrols,
-      [controlName]: {
-        ...this.state.constrols[controlName],
+    const updatedControls = updateObject(this.state.constrols, {
+      [controlName]: updateObject(this.state.constrols[controlName], {
         value: e.target.value,
         touched: true,
-        valid: this.checkValidity(
+        valid: checkValidity(
           e.target.value,
           this.state.constrols[controlName].validation
         )
-      }
-    };
+      })
+    });
 
     let formIsValid = true;
     for (let input in updatedControls) {
