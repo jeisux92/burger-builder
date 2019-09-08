@@ -124,5 +124,6 @@
     "presets": [
       "react-app"
     ]
-  }
+  },
+  "homepage" : "https://jeisux92.github.io/burger-builder/"
 }
