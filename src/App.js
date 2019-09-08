@@ -7,29 +7,27 @@ import Logout from "./containers/Auth/Logout/Logout";
 import { connect } from "react-redux";
 import { authCheckState } from "./store/actions";
 
-const Checkout = lazy(() => import('./containers/Checkout/Checkout'));
-const Orders = lazy(() => import('./containers/Orders/Orders'));
-const Auth = lazy(() => import('./containers/Auth/Auth'));
+const Checkout = lazy(() => import("./containers/Checkout/Checkout"));
+const Orders = lazy(() => import("./containers/Orders/Orders"));
+const Auth = lazy(() => import("./containers/Auth/Auth"));
 class App extends Component {
   state = {
     route: ""
-  }
+  };
 
   componentDidMount() {
     this.props.onTryAutoSignUp();
-    if (this.state.route !== this.props.location.pathname) {
-      this.setState({ route: this.props.location.pathname })
-    }
   }
 
   render() {
-
     let route = (
-      <Switch>
-        <Route path="/" exact component={BurgerBuilder} />
-        <Route path="/login" exact component={Auth} />
-        <Redirect to="/" />
-      </Switch>
+      <Suspense fallback={<div>Loading</div>}>
+        <Switch>
+          <Route path="/" exact component={BurgerBuilder} />
+          <Route path="/login" exact component={Auth} />
+          <Redirect to="/" />
+        </Switch>
+      </Suspense>
     );
 
     if (this.props.isAuthenticated) {
@@ -48,7 +46,6 @@ class App extends Component {
     }
     return (
       <div>
-
         <Layout>{route}</Layout>
       </div>
     );
